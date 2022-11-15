@@ -3,6 +3,7 @@ import GPUtil
 import helpers as hlp
 import constants
 from PerformanceMonitoring.process_data import ProcessData
+from openpyxl import Workbook
 
 
 class Processor:
@@ -11,6 +12,8 @@ class Processor:
     last_iteration_cpu = {}
     # Simply int to keep track of gpu_utilization
     gpu_utilization = None
+
+    wb = Workbook().active
 
     # The functions that run all the other functions. Gets a dictionary of processes, checks GPU utilization, and
     # compares the current list of processes to the last runs.
@@ -99,6 +102,9 @@ class Processor:
         # print out a message.
         if hlp.calculate_percentage_difference(last_iter_cpu,
                                                current_iter_cpu) > constants.CPU_PERCENTAGE_CHANGE_THRESHOLD:
+            self.wb['A1'] = hlp.calculate_percentage_difference(last_iter_cpu, current_iter_cpu)
+            self.wb['A2'] = current_iter_cpu
+
             # If last > current, that means CPU usage decreased.
             if last_iter_cpu > current_iter_cpu:
                 print(constants.CPU_DECREASED_UTILIZATION_MSG.format(key, self.last_iteration_cpu[key].process_id,
