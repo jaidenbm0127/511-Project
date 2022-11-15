@@ -13,7 +13,10 @@ class Processor:
     # Simply int to keep track of gpu_utilization
     gpu_utilization = None
 
-    wb = Workbook().active
+    row = 1
+
+    wb = Workbook()
+    ws = wb.active
 
     # The functions that run all the other functions. Gets a dictionary of processes, checks GPU utilization, and
     # compares the current list of processes to the last runs.
@@ -102,8 +105,8 @@ class Processor:
         # print out a message.
         if hlp.calculate_percentage_difference(last_iter_cpu,
                                                current_iter_cpu) > constants.CPU_PERCENTAGE_CHANGE_THRESHOLD:
-            self.wb['A1'] = hlp.calculate_percentage_difference(last_iter_cpu, current_iter_cpu)
-            self.wb['A2'] = current_iter_cpu
+            self.ws['A' + str(self.row)] = hlp.calculate_percentage_difference(last_iter_cpu, current_iter_cpu)
+            self.ws['B' + str(self.row)] = current_iter_cpu
 
             # If last > current, that means CPU usage decreased.
             if last_iter_cpu > current_iter_cpu:
@@ -119,6 +122,8 @@ class Processor:
                                                                      (current_iter_cpu, last_iter_cpu),
                                                                      round(current_iter_cpu, 2)
                                                                      ))
+
+            self.row += 1
 
     # Takes a key and compares the memory utilization differences for that processes between last run and this run.
     # Functionally identical to check_cpu_differences
@@ -176,3 +181,7 @@ class Processor:
                     ))
 
         self.gpu_utilization = current_gpu_utilization
+
+    def save(self):
+
+        self.wb.save('sample.xlsx')

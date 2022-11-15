@@ -1,8 +1,8 @@
-CPU_THRESHOLD = 5
-MEMORY_THRESHOLD = 5
+CPU_THRESHOLD = 1
+MEMORY_THRESHOLD = 1
 CPU_PERCENTAGE_CHANGE_THRESHOLD = 50
 MEMORY_PERCENTAGE_CHANGE_THRESHOLD = 50
-GPU_PERCENTAGE_CHANGE_THRESHOLD = 100
+GPU_PERCENTAGE_CHANGE_THRESHOLD = 50
 
 MEMORY_DECREASED_UTILIZATION_MSG = "Process {} with name {} decreased its MEMORY utilization by {} percent. It's current MEMORY usage is {} percent."
 MEMORY_INCREASED_UTILIZATION_MSG = "Process {} with name {} increased its MEMORY utilization by {} percent. It's current MEMORY usage is {} percent."
