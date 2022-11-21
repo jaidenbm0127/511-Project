@@ -2,7 +2,8 @@ import psutil
 import GPUtil
 import helpers as hlp
 import constants
-from PerformanceMonitoring.process_data import ProcessData
+# from PerformanceMonitoring.process_data import ProcessData
+from process_data import ProcessData
 from openpyxl import Workbook
 
 
@@ -105,7 +106,10 @@ class Processor:
         # print out a message.
         if hlp.calculate_percentage_difference(last_iter_cpu,
                                                current_iter_cpu) > constants.CPU_PERCENTAGE_CHANGE_THRESHOLD:
+            self.ws['A1'] = 'CPU Utilization'
             self.ws['A' + str(self.row)] = hlp.calculate_percentage_difference(last_iter_cpu, current_iter_cpu)
+
+            self.ws['B1'] = 'CPU Usage'
             self.ws['B' + str(self.row)] = current_iter_cpu
 
             # If last > current, that means CPU usage decreased.
@@ -136,6 +140,11 @@ class Processor:
         # print out a message.
         if hlp.calculate_percentage_difference(last_iter_mem,
                                                current_iter_mem) > constants.MEMORY_PERCENTAGE_CHANGE_THRESHOLD:
+            self.ws['C1'] = ' MEMORY utilization'
+            self.ws['C' + str(self.row)] = hlp.calculate_percentage_difference(last_iter_mem, current_iter_mem)
+
+            self.ws['D1'] = 'MEMORY usage'
+            self.ws['D' + str(self.row)] = current_iter_mem
             # If last > current, that means memory usage decreased.
             if last_iter_mem > current_iter_mem:
                 print(constants.MEMORY_DECREASED_UTILIZATION_MSG.format(key, self.last_iteration_cpu[key].process_id,
@@ -150,6 +159,7 @@ class Processor:
                                                                         (current_iter_mem, last_iter_mem),
                                                                         round(current_iter_mem, 2)
                                                                         ))
+            self.row += 1
 
     def check_gpu_utilization(self):
 
@@ -168,6 +178,11 @@ class Processor:
             if current_gpu_utilization != 0 and self.gpu_utilization != 0 and \
                     hlp.calculate_percentage_difference(current_gpu_utilization, self.gpu_utilization) > \
                     constants.GPU_PERCENTAGE_CHANGE_THRESHOLD:
+                self.ws['E1'] = 'GPU utilization'
+                self.ws['E' + str(self.row)] = hlp.calculate_percentage_difference(current_gpu_utilization,
+                                                                                   self.gpu_utilization)
+                self.ws['F1'] = 'GPU current utilization'
+                self.ws['F' + str(self.row)] = self.gpu_utilization
                 if current_gpu_utilization > self.gpu_utilization:
                     print(constants.GPU_DECREASED_UTILIZATION_MSG.format
                           (hlp.calculate_percentage_difference
@@ -181,6 +196,7 @@ class Processor:
                     ))
 
         self.gpu_utilization = current_gpu_utilization
+        self.row += 1
 
     def save(self):
 
